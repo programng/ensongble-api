@@ -6,11 +6,14 @@ const fs = require('fs');
 const tmp = require('tmp');
 const spawn = require('child_process').spawn;
 const cors = require('cors')
-const ffmpeg = require('fluent-ffmpeg');
 
 const app = express();
 const port = process.env.PORT || 8080;;
 const upload = multer();
+
+const ffmpeg = require('fluent-ffmpeg');
+ffmpeg.setFfmpegPath('/home/ubuntu/anaconda2/bin/ffmpeg');
+ffmpeg.setFfprobePath('/home/ubuntu/anaconda2/bin/ffprobe');
 
 function escapeRegExp(str) {
     return str.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
