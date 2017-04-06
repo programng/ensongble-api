@@ -58,6 +58,26 @@ app.post('/prediction', upload.fields([{'name': 'files'}, {'name': 'meoww'}, {'n
           if (sterr) {
             console.log('error...', stderr)
           }
+          const pythonExe = '/home/ubuntu/anaconda2/bin/python';
+          const py = spawn(pythonExe, [path.join(__dirname, 'dist', 'predict.py')]);
+          let result;
+
+          py.stdout.on('data', (data) => {
+            console.log('stdout', data);
+            console.log(typeof data);
+            console.log(data.toString());
+            result = replaceAll(data.toString(), "'", '"');
+            console.log('node file result', result);
+          });
+          py.stdout.on('end', () => {
+            console.log('end python script');
+            res.send(result)
+          });
+          py.stderr.on('data', (data) => {
+            console.log('error to string', data.toString());
+          });
+          py.stdin.write(JSON.stringify(file_names));
+          py.stdin.end();
       })
       .save(tmpobj.name);
     } else {
@@ -68,26 +88,26 @@ app.post('/prediction', upload.fields([{'name': 'files'}, {'name': 'meoww'}, {'n
     console.log(`${i}: ${tmpobj.name}`);
   }
 
-  const pythonExe = '/home/ubuntu/anaconda2/bin/python';
-  const py = spawn(pythonExe, [path.join(__dirname, 'dist', 'predict.py')]);
-  let result;
+  // const pythonExe = '/home/ubuntu/anaconda2/bin/python';
+  // const py = spawn(pythonExe, [path.join(__dirname, 'dist', 'predict.py')]);
+  // let result;
 
-  py.stdout.on('data', (data) => {
-    console.log('stdout', data);
-    console.log(typeof data);
-    console.log(data.toString());
-    result = replaceAll(data.toString(), "'", '"');
-    console.log('node file result', result);
-  });
-  py.stdout.on('end', () => {
-    console.log('end python script');
-    res.send(result)
-  });
-  py.stderr.on('data', (data) => {
-    console.log('error to string', data.toString());
-  });
-  py.stdin.write(JSON.stringify(file_names));
-  py.stdin.end();
+  // py.stdout.on('data', (data) => {
+  //   console.log('stdout', data);
+  //   console.log(typeof data);
+  //   console.log(data.toString());
+  //   result = replaceAll(data.toString(), "'", '"');
+  //   console.log('node file result', result);
+  // });
+  // py.stdout.on('end', () => {
+  //   console.log('end python script');
+  //   res.send(result)
+  // });
+  // py.stderr.on('data', (data) => {
+  //   console.log('error to string', data.toString());
+  // });
+  // py.stdin.write(JSON.stringify(file_names));
+  // py.stdin.end();
 
 });
 
