@@ -57,7 +57,7 @@ app.post('/prediction', upload.fields([{'name': 'files'}, {'name': 'meoww'}, {'n
             console.log('error...', stderr)
           }
       })
-      .save('tmpobj.name);
+      .save(tmpobj.name);
     } else {
       fs.writeFileSync(tmpobj.name, buffer);
     }
