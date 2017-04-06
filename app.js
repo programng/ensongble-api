@@ -11,9 +11,9 @@ const app = express();
 const port = process.env.PORT || 8080;;
 const upload = multer();
 
-const ffmpeg = require('fluent-ffmpeg');
-ffmpeg.setFfmpegPath('/home/ubuntu/anaconda2/bin/ffmpeg');
-ffmpeg.setFfprobePath('/home/ubuntu/anaconda2/bin/ffprobe');
+// const ffmpeg = require('fluent-ffmpeg');
+// ffmpeg.setFfmpegPath('/home/ubuntu/anaconda2/bin/ffmpeg');
+// ffmpeg.setFfprobePath('/home/ubuntu/anaconda2/bin/ffprobe');
 
 function escapeRegExp(str) {
     return str.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
@@ -40,77 +40,78 @@ app.post('/prediction', upload.fields([{'name': 'files'}, {'name': 'meoww'}, {'n
   let file_names = [];
   for (let i = 0; i < files.length; i += 1) {
     // const file_extension = 'wav';
+    const file_extension = files[i].mimetype.split('/')[1];
     const buffer = files[i].buffer;
-    const tmpobj = tmp.fileSync({postfix: '.wav'});
+    const tmpobj = tmp.fileSync({postfix: `.${file_extension}`});
     // const tmpobj = tmp.fileSync({postfix: '.wav'});
 
-    const file_extension = files[i].mimetype.split('/')[1];
     console.log(file_extension);
-    if (file_extension === 'mp3') {
-      ffmpeg(buffer)
-      .toFormat('wav')
-      .on('error', function (err) {
-          console.log('An error occurred: ' + err.message);
-      })
-      .on('progress', function (progress) {
-          // console.log(JSON.stringify(progress));
-          console.log('Processing: ' + progress.targetSize + ' KB converted');
-      })
-      .on('end', function (stdout, stderr) {
-          console.log('Processing finished !', stdout);
-          if (sterr) {
-            console.log('error...', stderr)
-          }
-          const pythonExe = '/home/ubuntu/anaconda2/bin/python';
-          const py = spawn(pythonExe, [path.join(__dirname, 'dist', 'predict.py')]);
-          let result;
+  //   if (file_extension === 'mp3') {
+  //     ffmpeg(buffer)
+  //     .toFormat('wav')
+  //     .on('error', function (err) {
+  //         console.log('An error occurred: ' + err.message);
+  //     })
+  //     .on('progress', function (progress) {
+  //         // console.log(JSON.stringify(progress));
+  //         console.log('Processing: ' + progress.targetSize + ' KB converted');
+  //     })
+  //     .on('end', function (stdout, stderr) {
+  //         console.log('Processing finished !', stdout);
+  //         if (sterr) {
+  //           console.log('error...', stderr)
+  //         }
+  //         const pythonExe = '/home/ubuntu/anaconda2/bin/python';
+  //         const py = spawn(pythonExe, [path.join(__dirname, 'dist', 'predict.py')]);
+  //         let result;
 
-          py.stdout.on('data', (data) => {
-            console.log('stdout', data);
-            console.log(typeof data);
-            console.log(data.toString());
-            result = replaceAll(data.toString(), "'", '"');
-            console.log('node file result', result);
-          });
-          py.stdout.on('end', () => {
-            console.log('end python script');
-            res.send(result)
-          });
-          py.stderr.on('data', (data) => {
-            console.log('error to string', data.toString());
-          });
-          py.stdin.write(JSON.stringify(file_names));
-          py.stdin.end();
-      })
-      .save(tmpobj.name);
-    } else {
-      fs.writeFileSync(tmpobj.name, buffer);
-    }
+  //         py.stdout.on('data', (data) => {
+  //           console.log('stdout', data);
+  //           console.log(typeof data);
+  //           console.log(data.toString());
+  //           result = replaceAll(data.toString(), "'", '"');
+  //           console.log('node file result', result);
+  //         });
+  //         py.stdout.on('end', () => {
+  //           console.log('end python script');
+  //           res.send(result)
+  //         });
+  //         py.stderr.on('data', (data) => {
+  //           console.log('error to string', data.toString());
+  //         });
+  //         py.stdin.write(JSON.stringify(file_names));
+  //         py.stdin.end();
+  //     })
+  //     .save(tmpobj.name);
+  //   } else {
+  //     fs.writeFileSync(tmpobj.name, buffer);
+  //   }
 
-    file_names.push(tmpobj.name);
-    console.log(`${i}: ${tmpobj.name}`);
-  }
+  //   file_names.push(tmpobj.name);
+  //   console.log(`${i}: ${tmpobj.name}`);
+  // }
+  fs.writeFileSync(tmpobj.name, buffer);
 
-  // const pythonExe = '/home/ubuntu/anaconda2/bin/python';
-  // const py = spawn(pythonExe, [path.join(__dirname, 'dist', 'predict.py')]);
-  // let result;
+  const pythonExe = '/home/ubuntu/anaconda2/bin/python';
+  const py = spawn(pythonExe, [path.join(__dirname, 'dist', 'predict.py')]);
+  let result;
 
-  // py.stdout.on('data', (data) => {
-  //   console.log('stdout', data);
-  //   console.log(typeof data);
-  //   console.log(data.toString());
-  //   result = replaceAll(data.toString(), "'", '"');
-  //   console.log('node file result', result);
-  // });
-  // py.stdout.on('end', () => {
-  //   console.log('end python script');
-  //   res.send(result)
-  // });
-  // py.stderr.on('data', (data) => {
-  //   console.log('error to string', data.toString());
-  // });
-  // py.stdin.write(JSON.stringify(file_names));
-  // py.stdin.end();
+  py.stdout.on('data', (data) => {
+    console.log('stdout', data);
+    console.log(typeof data);
+    console.log(data.toString());
+    result = replaceAll(data.toString(), "'", '"');
+    console.log('node file result', result);
+  });
+  py.stdout.on('end', () => {
+    console.log('end python script');
+    res.send(result)
+  });
+  py.stderr.on('data', (data) => {
+    console.log('error to string', data.toString());
+  });
+  py.stdin.write(JSON.stringify(file_names));
+  py.stdin.end();
 
 });
 

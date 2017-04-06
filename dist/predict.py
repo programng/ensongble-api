@@ -9,6 +9,8 @@ from multiprocessing import Pool
 
 import librosa
 
+sys.path.append('/home/ubuntu/anaconda2/bin/')
+
 pool = Pool()
 
 def get_features(all_songs_for_movie, movie_name='unknown'):
