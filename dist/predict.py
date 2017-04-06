@@ -9,7 +9,7 @@ from multiprocessing import Pool
 
 import librosa
 
-sys.path.append('/home/ubuntu/anaconda2/bin/python')
+sys.path.append('/Users/jon/anaconda2/bin/ffmpeg')
 
 pool = Pool()
 
