@@ -6,6 +6,7 @@ const fs = require('fs');
 const tmp = require('tmp');
 const spawn = require('child_process').spawn;
 const cors = require('cors')
+const ffmpeg = require('fluent-ffmpeg');
 
 const app = express();
 const port = process.env.PORT || 8080;;
