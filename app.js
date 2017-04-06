@@ -35,7 +35,8 @@ app.post('/prediction', upload.fields([{'name': 'files'}, {'name': 'meoww'}, {'n
   const files = req.files.files;
   let file_names = [];
   for (let i = 0; i < files.length; i += 1) {
-    const file_extension = files[i].mimetype.split('/')[1];
+    const file_extension = '.wav';
+    // const file_extension = files[i].mimetype.split('/')[1];
     const buffer = files[i].buffer;
     const tmpobj = tmp.fileSync({postfix: `.${file_extension}`});
     // const tmpobj = tmp.fileSync({postfix: '.wav'});
