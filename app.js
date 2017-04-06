@@ -35,12 +35,33 @@ app.post('/prediction', upload.fields([{'name': 'files'}, {'name': 'meoww'}, {'n
   const files = req.files.files;
   let file_names = [];
   for (let i = 0; i < files.length; i += 1) {
-    const file_extension = 'wav';
-    // const file_extension = files[i].mimetype.split('/')[1];
+    // const file_extension = 'wav';
     const buffer = files[i].buffer;
-    const tmpobj = tmp.fileSync({postfix: `.${file_extension}`});
+    const tmpobj = tmp.fileSync({postfix: '.wav'});
     // const tmpobj = tmp.fileSync({postfix: '.wav'});
-    fs.writeFileSync(tmpobj.name, buffer);
+
+    const file_extension = files[i].mimetype.split('/')[1];
+    if (file_extension === 'mp3') {
+      ffmpeg(buffer)
+      .toFormat('wav')
+      .on('error', function (err) {
+          console.log('An error occurred: ' + err.message);
+      })
+      .on('progress', function (progress) {
+          // console.log(JSON.stringify(progress));
+          console.log('Processing: ' + progress.targetSize + ' KB converted');
+      })
+      .on('end', function (stdout, stderr) {
+          console.log('Processing finished !', stdout);
+          if (sterr) {
+            console.log('error...', stderr)
+          }
+      })
+      .save('tmpobj.name);
+    } else {
+      fs.writeFileSync(tmpobj.name, buffer);
+    }
+
     file_names.push(tmpobj.name);
     console.log(`${i}: ${tmpobj.name}`);
   }
