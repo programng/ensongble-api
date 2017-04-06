@@ -9,7 +9,7 @@ from multiprocessing import Pool
 
 import librosa
 
-sys.path.append('/home/ubuntu/anaconda2/bin/')
+sys.path.append('/home/ubuntu/anaconda2/bin/python')
 
 pool = Pool()
 
