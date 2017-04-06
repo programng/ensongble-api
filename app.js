@@ -11,6 +11,9 @@ const app = express();
 const port = process.env.PORT || 8080;;
 const upload = multer();
 
+console.log('process.env', process.env);
+console.log('process.env.PATH', process.env.PATH);
+
 // const ffmpeg = require('fluent-ffmpeg');
 // ffmpeg.setFfmpegPath('/home/ubuntu/anaconda2/bin/ffmpeg');
 // ffmpeg.setFfprobePath('/home/ubuntu/anaconda2/bin/ffprobe');
