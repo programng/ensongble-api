@@ -42,6 +42,7 @@ app.post('/prediction', upload.fields([{'name': 'files'}, {'name': 'meoww'}, {'n
     // const tmpobj = tmp.fileSync({postfix: '.wav'});
 
     const file_extension = files[i].mimetype.split('/')[1];
+    console.log(file_extension);
     if (file_extension === 'mp3') {
       ffmpeg(buffer)
       .toFormat('wav')
