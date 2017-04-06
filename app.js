@@ -86,11 +86,11 @@ app.post('/prediction', upload.fields([{'name': 'files'}, {'name': 'meoww'}, {'n
   //   } else {
   //     fs.writeFileSync(tmpobj.name, buffer);
   //   }
+    fs.writeFileSync(tmpobj.name, buffer);
 
-  //   file_names.push(tmpobj.name);
-  //   console.log(`${i}: ${tmpobj.name}`);
-  // }
-  fs.writeFileSync(tmpobj.name, buffer);
+    file_names.push(tmpobj.name);
+    console.log(`${i}: ${tmpobj.name}`);
+  }
 
   const pythonExe = '/home/ubuntu/anaconda2/bin/python';
   const py = spawn(pythonExe, [path.join(__dirname, 'dist', 'predict.py')]);
