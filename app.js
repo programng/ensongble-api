@@ -92,7 +92,7 @@ app.post('/prediction', upload.fields([{'name': 'files'}, {'name': 'meoww'}, {'n
     console.log(`${i}: ${tmpobj.name}`);
   }
 
-  const pythonExe = '/home/ubuntu/anaconda2/bin/python';
+  const pythonExe = 'python';
   const py = spawn(pythonExe, [path.join(__dirname, 'dist', 'predict.py')]);
   let result;
 
